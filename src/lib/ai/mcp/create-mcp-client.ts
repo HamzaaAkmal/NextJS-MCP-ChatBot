@@ -28,6 +28,7 @@ import { BASE_URL, IS_MCP_SERVER_REMOTE_ONLY, IS_VERCEL_ENV } from "lib/const";
 import { UnauthorizedError } from "@modelcontextprotocol/sdk/client/auth.js";
 import { PgOAuthClientProvider } from "./pg-oauth-provider";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
+import { pgMcpOAuthRepository } from "lib/db/pg/repositories/mcp-oauth-repository.pg";
 
 type ClientOptions = {
   autoDisconnectSeconds?: number;
@@ -193,6 +194,16 @@ export class MCPClient {
       this.isConnected = false;
       this.client = undefined;
 
+      // Check if there's an existing authenticated OAuth session for this server
+      // If so, use OAuth provider from the start instead of waiting for 401
+      if (isMaybeRemoteConfig(this.serverConfig) && !this.needOauthProvider) {
+        const existingSession = await pgMcpOAuthRepository.getAuthenticatedSession(this.id);
+        if (existingSession?.tokens) {
+          this.logger.info("Found existing OAuth tokens, using OAuth provider");
+          this.needOauthProvider = true;
+        }
+      }
+
       const client = new Client({
         name: `better-chatbot-${this.name}`,
         version: "1.0.0",
@@ -302,6 +313,8 @@ export class MCPClient {
       );
       this.client = client;
       this.isConnected = true;
+      // Clear authorization URL on successful connection (especially important after OAuth flow)
+      this.authorizationUrl = undefined;
 
       this.scheduleAutoDisconnect();
     } catch (error) {
