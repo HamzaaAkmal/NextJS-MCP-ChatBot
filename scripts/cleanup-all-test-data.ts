@@ -17,13 +17,16 @@ if (process.env.CI) {
   config();
 }
 
-import { sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { sql, like } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from "@libsql/client";
 import { UserTable } from "../src/lib/db/pg/schema.pg";
-import { like } from "drizzle-orm";
 
-// Create database connection
-const db = drizzle(process.env.POSTGRES_URL!);
+// Create database connection (using libsql/SQLite)
+const client = createClient({
+  url: "file:" + (process.env.POSTGRES_URL || "./data/better-chatbot.db"),
+});
+const db = drizzle(client);
 
 async function cleanupAllTestData() {
   console.log("🧹 Cleaning up ALL test data including seeded users...");

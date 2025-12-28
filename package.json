@@ -18,6 +18,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:seed": "dotenv -- tsx scripts/seed-test-users.ts",
     "test:e2e:clean": "dotenv -- tsx scripts/cleanup-all-test-data.ts",
+    "seed:mcp": "tsx scripts/seed-default-mcp.ts",
     "lint": "biome lint",
     "lint:fix": "biome lint --write --unsafe",
     "format": "biome format --write",
