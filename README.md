@@ -23,7 +23,7 @@ You only need **one AI Provider API Key** (OpenAI, Claude, Gemini, etc.). Everyt
 
 ---
 
-**Better Chatbot** - A better open-source AI chatbot for individuals and teams, inspired by ChatGPT, Claude, Grok, and Gemini.
+**Sync0** - A better open-source AI chatbot for individuals and teams, inspired by ChatGPT, Claude, Grok, and Gemini.
 
 • **Multi-AI Support** - Integrates all major LLMs: OpenAI, Anthropic, Google, xAI, Ollama, and more  
 • **Powerful Tools** - MCP protocol, web search, JS/Python code execution, data visualization  
@@ -362,7 +362,7 @@ NOT_ALLOW_ADD_MCP_SERVERS=
 
 ## 📘 Guides
 
-Step-by-step setup guides for running and configuring better-chatbot.
+Step-by-step setup guides for running and configuring Sync0.
 
 #### [🔌 MCP Server Setup & Tool Testing](./docs/tips-guides/mcp-server-setup-and-tool-testing.md)
 
@@ -405,7 +405,7 @@ Step-by-step setup guides for running and configuring better-chatbot.
 
 ## 🗺️ Roadmap
 
-Planned features coming soon to better-chatbot:
+Planned features coming soon to Sync0:
 
 - [x] **File Upload & Storage** (Vercel Blob integration)
 - [x] **Image Generation**
