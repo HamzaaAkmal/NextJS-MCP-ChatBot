@@ -3,7 +3,7 @@
 ## [1.26.0](https://github.com/cgoinglove/better-chatbot/compare/v1.25.0...v1.26.0) (2025-11-07)
 
 
-### Features
+### Features 2026
 
 * add LaTeX/TeX math equation rendering support ([#318](https://github.com/cgoinglove/better-chatbot/issues/318)) ([c0a8b5b](https://github.com/cgoinglove/better-chatbot/commit/c0a8b5b9b28599716013c83cac03fa5745ffd403)) by @jezweb
 
