@@ -1,4 +1,5 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from "@libsql/client";
 import {
   UserTable,
   SessionTable,
@@ -11,7 +12,10 @@ import { config } from "dotenv";
 
 config();
 
-const db = drizzle(process.env.POSTGRES_URL!);
+const client = createClient({
+  url: "file:" + (process.env.POSTGRES_URL || "./data/better-chatbot.db"),
+});
+const db = drizzle(client);
 
 async function cleanup() {
   console.log("Cleaning up test data...");

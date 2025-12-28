@@ -20,21 +20,20 @@ if (process.env.CI) {
 
 import { auth } from "auth/auth-instance";
 import { USER_ROLES } from "app-types/roles";
-import { sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { sql, like, eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from "@libsql/client";
 import {
   UserTable,
   ChatMessageTable,
   ChatThreadTable,
 } from "lib/db/pg/schema.pg";
-import { like, eq } from "drizzle-orm";
 
-// Create database connection with Pool
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL!,
+// Create database connection (using libsql/SQLite)
+const client = createClient({
+  url: "file:" + (process.env.POSTGRES_URL || "./data/better-chatbot.db"),
 });
-const db = drizzle(pool);
+const db = drizzle(client);
 
 // Helper function to get user by email
 async function getUserByEmail(email: string) {
@@ -440,12 +439,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   seedTestUsers()
     .then(async () => {
       console.log("🎉 Seeding completed!");
-      await pool.end();
+      await client.close();
       process.exit(0);
     })
     .catch(async (error) => {
       console.error("💥 Seeding failed:", error);
-      await pool.end();
+      await client.close();
       process.exit(1);
     });
 }
