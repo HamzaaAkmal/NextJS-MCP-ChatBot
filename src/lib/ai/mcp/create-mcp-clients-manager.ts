@@ -166,7 +166,7 @@ export class MCPClientsManager {
   /**
    * Persists a new client configuration to storage and adds the client instance to memory
    */
-  async persistClient(server: typeof McpServerTable.$inferInsert) {
+  async persistClient(server: McpServerInsert) {
     let id = server.name;
     if (this.storage) {
       const entity = await this.storage.save(server);
