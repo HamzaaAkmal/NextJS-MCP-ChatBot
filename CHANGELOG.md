@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2025-12-29)
+
+
+### Bug Fixes
+
+* check for existing OAuth tokens before MCP connection ([116e41d](https://github.com/HamzaaAkmal/MCP-Chatbot/commit/116e41df5e1123189ced982715be88b3d36b720c))
+
 ## [1.26.0](https://github.com/cgoinglove/better-chatbot/compare/v1.25.0...v1.26.0) (2025-11-07)
 
 
