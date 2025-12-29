@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { McpServerTable } from "lib/db/pg/schema.pg";
 import { mcpOAuthRepository, mcpRepository } from "lib/db/repository";
+import { type McpServerInsert } from "app-types/mcp";
 import {
   canCreateMCP,
   canManageMCPServer,
@@ -55,7 +56,7 @@ export async function selectMcpClientAction(id: string) {
 }
 
 export async function saveMcpClientAction(
-  server: typeof McpServerTable.$inferInsert,
+  server: Omit<McpServerInsert, "userId"> & { visibility?: string },
 ) {
   if (process.env.NOT_ALLOW_ADD_MCP_SERVERS) {
     throw new Error("Not allowed to add MCP servers");
@@ -101,10 +102,10 @@ export async function saveMcpClientAction(
   }
 
   // Add userId to the server object
-  const serverWithUser = {
+  const serverWithUser: McpServerInsert = {
     ...server,
     userId: currentUser.id,
-    visibility: server.visibility || "private",
+    visibility: (server.visibility as "public" | "private" | undefined) || "private",
   };
 
   return mcpClientsManager.persistClient(serverWithUser);
