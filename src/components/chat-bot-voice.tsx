@@ -7,6 +7,10 @@ import {
   OPENAI_VOICE,
   useOpenAIVoiceChat as OpenAIVoiceChat,
 } from "lib/ai/speech/open-ai/use-voice-chat.openai";
+import {
+  GROQ_VOICE,
+  useGroqVoiceChat as GroqVoiceChat,
+} from "lib/ai/speech/groq/use-voice-chat.groq";
 import { cn, groupBy, isNull } from "lib/utils";
 import {
   CheckIcon,
@@ -122,6 +126,23 @@ export function ChatBotVoice() {
     );
   }, [agentId, agent, mcpList, allowedMcpServers]);
 
+  const isGroqProvider = voiceChat.options.provider === "groq";
+
+  // OpenAI Voice Chat Hook
+  const openaiSession = OpenAIVoiceChat({
+    toolMentions,
+    agentId,
+    ...voiceChat.options.providerOptions,
+  });
+
+  // Groq Voice Chat Hook
+  const groqSession = GroqVoiceChat({
+    toolMentions,
+    agentId,
+    ...voiceChat.options.providerOptions,
+  });
+
+  // Select the active session based on provider
   const {
     isListening,
     isAssistantSpeaking,
@@ -134,11 +155,7 @@ export function ChatBotVoice() {
     startListening,
     stop,
     stopListening,
-  } = OpenAIVoiceChat({
-    toolMentions,
-    agentId,
-    ...voiceChat.options.providerOptions,
-  });
+  } = isGroqProvider ? groqSession : openaiSession;
 
   const startWithSound = useCallback(() => {
     if (!startAudio.current) {
@@ -399,6 +416,51 @@ export function ChatBotVoice() {
                             )}
                           </DropdownMenuSubContent>
                         </DropdownMenuPortal>
+                      </DropdownMenuSub>
+                      <DropdownMenuSub>
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger
+                            className="flex items-center gap-2"
+                            icon=""
+                          >
+                            <span className="size-3.5 flex items-center justify-center text-[10px] font-bold">G</span>
+                            Groq
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
+                              {Object.entries(GROQ_VOICE).map(
+                                ([key, value]) => (
+                                  <DropdownMenuItem
+                                    className="cursor-pointer flex items-center justify-between"
+                                    onClick={() =>
+                                      appStoreMutate({
+                                        voiceChat: {
+                                          ...voiceChat,
+                                          options: {
+                                            provider: "groq",
+                                            providerOptions: {
+                                              voice: value,
+                                            },
+                                          },
+                                        },
+                                      })
+                                    }
+                                    key={key}
+                                  >
+                                    {key}
+
+                                    {voiceChat.options.provider === "groq" &&
+                                      value ===
+                                        voiceChat.options.providerOptions
+                                          ?.voice && (
+                                        <CheckIcon className="size-3.5" />
+                                      )}
+                                  </DropdownMenuItem>
+                                ),
+                              )}
+                            </DropdownMenuSubContent>
+                          </DropdownMenuPortal>
+                        </DropdownMenuSub>
                       </DropdownMenuSub>
                       <DropdownMenuSub>
                         <DropdownMenuSub>
