@@ -5,53 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e9a55d7-58c3-4e10-be2b-f1ecba91ece6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/../.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../data/better-chatbot.db" beforeDir="false" afterPath="$PROJECT_DIR$/../data/better-chatbot.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../drizzle.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../drizzle.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/(chat)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/(chat)/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/globals.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/agent/edit-agent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/agent/edit-agent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/agent/generate-agent-dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/agent/generate-agent-dialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/chat-bot-voice.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/chat-bot-voice.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/chat-bot.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/chat-bot.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/edit-json-schema-field-popup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/edit-json-schema-field-popup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/export/comment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/export/comment.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/export/comments.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/export/comments.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/layouts/app-header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/layouts/app-header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/layouts/app-sidebar-agents.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/layouts/app-sidebar-agents.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/layouts/app-sidebar-threads.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/layouts/app-sidebar-threads.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/layouts/app-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/layouts/app-sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/message-parts.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/message-parts.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/message.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/message.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/pre-block.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/pre-block.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/prompt-input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/prompt-input.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/select-model.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/select-model.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/tool-invocation/interactive-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tool-invocation/interactive-table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/tool-invocation/web-search.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tool-invocation/web-search.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/tool-select-dropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tool-select-dropdown.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/user/user-detail/user-role-badges.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/user/user-detail/user-role-badges.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/user/user-detail/user-status-badge.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/user/user-detail/user-status-badge.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/edit-workflow-popup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/edit-workflow-popup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/next-node-info.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/next-node-info.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/node-config/llm-node-config.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/node-config/llm-node-config.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/output-schema-editor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/output-schema-editor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/workflow-list-page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/workflow-list-page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/workflow-panel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/workflow-panel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/workflow-tool-select.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/workflow-tool-select.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/workflow/workflow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/workflow/workflow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/ai/speech/groq/use-voice-chat.groq.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/ai/speech/groq/use-voice-chat.groq.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/ai/speech/open-ai/use-voice-chat.openai.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/ai/speech/open-ai/use-voice-chat.openai.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/migrations/pg/0000_melted_shinobi_shaw.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/migrations/pg/meta/0000_snapshot.json" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/db/migrations/pg/meta/0000_snapshot.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/migrations/pg/meta/_journal.json" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/db/migrations/pg/meta/_journal.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/pg/db.pg.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/db/pg/db.pg.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/pg/migrate.pg.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/db/pg/migrate.pg.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/pg/repositories/agent-repository.pg.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/db/pg/repositories/agent-repository.pg.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/pg/repositories/bookmark-repository.pg.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/db/pg/repositories/bookmark-repository.pg.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/lib/db/pg/schema.pg.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/lib/db/pg/schema.pg.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,10 +19,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="37eElTbEKCO28P9q5T8Ivu49HZu" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -78,12 +33,13 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "android.gradle.sync.needed": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "voice",
+    "git-widget-placeholder": "supabase-migration",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
