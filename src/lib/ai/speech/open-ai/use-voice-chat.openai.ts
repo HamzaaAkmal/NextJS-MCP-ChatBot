@@ -97,6 +97,11 @@ export function useOpenAIVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
 
   const startListening = useCallback(async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+          "getUserMedia is not supported in this browser or context. Please use HTTPS or check browser compatibility.",
+        );
+      }
       if (!audioStream.current) {
         audioStream.current = await navigator.mediaDevices.getUserMedia({
           audio: true,
@@ -396,6 +401,11 @@ export function useOpenAIVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
           audioElement.current.srcObject = e.streams[0];
         }
       };
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+          "getUserMedia is not supported in this browser or context. Please use HTTPS or check browser compatibility.",
+        );
+      }
       if (!audioStream.current) {
         audioStream.current = await navigator.mediaDevices.getUserMedia({
           audio: true,

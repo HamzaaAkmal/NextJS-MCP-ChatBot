@@ -278,7 +278,7 @@ export function EditJsonSchemaFieldContent({
                   variant="ghost"
                   size="icon"
                   onClick={() => handleRemoveEnumValue(index)}
-                  className="hover:bg-destructive/10! text-muted-foreground hover:text-destructive"
+                  className="!hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
                 >
                   <TrashIcon />
                 </Button>

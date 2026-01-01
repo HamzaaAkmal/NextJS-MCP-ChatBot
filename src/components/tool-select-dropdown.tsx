@@ -485,7 +485,7 @@ function WorkflowToolSelector({
                       </div>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="md:max-w-3xl!">
+                  <DialogContent className="md:!max-w-3xl">
                     <DialogTitle className="sr-only">
                       workflow greeting
                     </DialogTitle>

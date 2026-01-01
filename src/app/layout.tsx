@@ -22,6 +22,22 @@ export const metadata: Metadata = {
   title: "better-chatbot",
   description:
     "Better Chatbot is a chatbot that uses the Tools to answer questions.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    viewportFit: "cover",
+  },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Chatbot",
+  },
 };
 
 export default async function RootLayout({
@@ -34,7 +50,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased touch-manipulation overscroll-none`}
       >
         <ThemeProvider
           attribute="class"

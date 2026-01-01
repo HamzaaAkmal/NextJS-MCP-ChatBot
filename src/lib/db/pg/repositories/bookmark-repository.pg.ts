@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { pgDb as db } from "../db.pg";
 import { BookmarkTable, AgentTable } from "../schema.pg";
 
@@ -68,7 +68,7 @@ export const pgBookmarkRepository: BookmarkRepository = {
       const agent = await db
         .select()
         .from(AgentTable)
-        .where(eq(AgentTable.id, itemId))
+        .where(sql`${AgentTable.id} = ${itemId}::uuid`)
         .limit(1);
 
       if (!agent[0]) return false;

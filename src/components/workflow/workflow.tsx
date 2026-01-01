@@ -296,7 +296,7 @@ export default function Workflow({
         fitViewOptions={fitViewOptions}
       >
         <Background gap={12} size={0.6} />
-        <Panel position="top-right" className="z-20!">
+        <Panel position="top-right" className="!z-20">
           {workflow && (
             <WorkflowPanel
               hasEditAccess={hasEditAccess}
@@ -310,7 +310,7 @@ export default function Workflow({
         </Panel>
         <Panel
           position="top-left"
-          className="h-full w-full m-0! pointer-events-none!"
+          className="h-full w-full !m-0 !pointer-events-none"
         >
           <div className="z-10 absolute inset-0 w-full h-1/12 bg-gradient-to-b to-90% from-background to-transparent  pointer-events-none" />
           <div className="z-10 absolute inset-0 w-1/12 h-full bg-gradient-to-r from-background to-transparent  pointer-events-none" />

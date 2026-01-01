@@ -190,7 +190,7 @@ export function AppSidebarAgents({ userRole }: { userRole?: string | null }) {
                           >
                             <SidebarMenuButton
                               asChild
-                              className="data-[state=open]:bg-input! w-full"
+                              className="data-[state=open]:!bg-input w-full"
                             >
                               <div className="flex gap-1 w-full min-w-0">
                                 <div
@@ -235,7 +235,7 @@ export function AppSidebarAgents({ userRole }: { userRole?: string | null }) {
                                     side="right"
                                     align="start"
                                   >
-                                    <SidebarMenuAction className="data-[state=open]:bg-input! data-[state=open]:opacity-100  opacity-0 group-hover/agent:opacity-100 mr-2">
+                                    <SidebarMenuAction className="data-[state=open]:!bg-input data-[state=open]:!opacity-100  opacity-0 group-hover/agent:opacity-100 mr-2">
                                       <MoreHorizontal className="size-4" />
                                     </SidebarMenuAction>
                                   </AgentDropdown>

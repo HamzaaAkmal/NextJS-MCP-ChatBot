@@ -46,7 +46,7 @@ export function UserRoleBadges({
             onClick={isClickable ? onRoleClick : undefined}
           >
             {userRolesInfo[role as UserRoleNames]?.label || role}
-            {isClickable && <Edit2 className="size-2.5!" />}
+            {isClickable && <Edit2 className="!size-2.5" />}
           </Badge>
         );
 

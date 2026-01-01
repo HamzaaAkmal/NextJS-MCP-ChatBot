@@ -411,10 +411,10 @@ export default function PromptInput({
   // Drag overlay handled globally in ChatBot
 
   return (
-    <div className="max-w-3xl mx-auto fade-in animate-in">
+    <div className="max-w-3xl mx-auto fade-in animate-in px-3 md:px-0">
       <div className="z-10 mx-auto w-full max-w-3xl relative">
-        <fieldset className="flex w-full min-w-0 max-w-full flex-col px-4">
-          <div className="shadow-lg overflow-hidden rounded-4xl backdrop-blur-sm transition-all duration-200 bg-muted/60 relative flex w-full flex-col cursor-text z-10 items-stretch focus-within:bg-muted hover:bg-muted focus-within:ring-muted hover:ring-muted">
+        <fieldset className="flex w-full min-w-0 max-w-full flex-col px-1 md:px-4">
+          <div className="shadow-lg overflow-hidden rounded-3xl md:rounded-4xl backdrop-blur-sm transition-all duration-200 bg-muted/60 relative flex w-full flex-col cursor-text z-10 items-stretch focus-within:bg-muted hover:bg-muted focus-within:ring-muted hover:ring-muted">
             {mentions.length > 0 && (
               <div className="bg-input rounded-b-sm rounded-t-3xl p-3 flex flex-col gap-4 mx-2 my-2">
                 {mentions.map((mention, i) => {
@@ -463,7 +463,7 @@ export default function PromptInput({
                         variant={"ghost"}
                         size={"icon"}
                         disabled={!threadId}
-                        className="rounded-full hover:bg-input! flex-shrink-0"
+                        className="rounded-full !hover:bg-input flex-shrink-0"
                         onClick={() => {
                           deleteMention(mention);
                         }}
@@ -475,7 +475,7 @@ export default function PromptInput({
                 })}
               </div>
             )}
-            <div className="flex flex-col gap-3.5 px-5 pt-2 pb-4">
+            <div className="flex flex-col gap-3 md:gap-3.5 px-3 md:px-5 pt-2 pb-3 md:pb-4">
               <div className="relative min-h-[2rem]">
                 <ChatMentionInput
                   input={input}
@@ -488,7 +488,7 @@ export default function PromptInput({
                   onFocus={onFocus}
                 />
               </div>
-              <div className="flex w-full items-center z-30">
+              <div className="flex w-full items-center z-30 gap-1 overflow-x-auto">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -507,10 +507,10 @@ export default function PromptInput({
                     <Button
                       variant={"ghost"}
                       size={"sm"}
-                      className="rounded-full hover:bg-input! p-2! data-[state=open]:bg-input!"
+                      className="rounded-full !hover:bg-input p-2 md:!p-2 data-[state=open]:!bg-input touch-manipulation h-9 w-9 md:h-8 md:w-8"
                       disabled={!threadId}
                     >
-                      <PlusIcon />
+                      <PlusIcon className="h-5 w-5 md:h-4 md:w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" side="top">
@@ -559,7 +559,7 @@ export default function PromptInput({
                     <Button
                       variant={"ghost"}
                       size={"sm"}
-                      className="rounded-full hover:bg-input! p-2! group/image-generator text-primary"
+                      className="rounded-full !hover:bg-input !p-2 group/image-generator text-primary"
                       onClick={() => handleGenerateImage()}
                     >
                       <ImagesIcon className="size-3.5" />
@@ -581,13 +581,13 @@ export default function PromptInput({
                     </>
                   ))}
 
-                <div className="flex-1" />
+                <div className="flex-1 min-w-2" />
 
                 <SelectModel onSelect={setChatModel} currentModel={chatModel}>
                   <Button
                     variant={"ghost"}
                     size={"sm"}
-                    className="rounded-full group data-[state=open]:bg-input! hover:bg-input! mr-1"
+                    className="rounded-full group data-[state=open]:!bg-input !hover:bg-input mr-1 touch-manipulation h-9 min-w-[60px] md:min-w-[80px] text-xs md:text-sm px-2 md:px-3 flex-shrink-0"
                     data-testid="model-selector-button"
                   >
                     {chatModel?.model ? (
@@ -629,9 +629,9 @@ export default function PromptInput({
                             },
                           }));
                         }}
-                        className="rounded-full p-2!"
+                        className="rounded-full p-2 h-10 w-10 md:h-9 md:w-9 touch-manipulation flex-shrink-0"
                       >
-                        <AudioWaveformIcon size={16} />
+                        <AudioWaveformIcon className="h-5 w-5 md:h-4 md:w-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>{t("VoiceChat.title")}</TooltipContent>
@@ -645,15 +645,12 @@ export default function PromptInput({
                         submit();
                       }
                     }}
-                    className="fade-in animate-in cursor-pointer text-muted-foreground rounded-full p-2 bg-secondary hover:bg-accent-foreground hover:text-accent transition-all duration-200"
+                    className="fade-in animate-in cursor-pointer text-muted-foreground rounded-full p-2.5 md:p-2 bg-secondary hover:bg-accent-foreground hover:text-accent transition-all duration-200 touch-manipulation h-10 w-10 md:h-9 md:w-9 flex items-center justify-center flex-shrink-0"
                   >
                     {isLoading ? (
-                      <Square
-                        size={16}
-                        className="fill-muted-foreground text-muted-foreground"
-                      />
+                      <Square className="fill-muted-foreground text-muted-foreground h-4 w-4" />
                     ) : (
-                      <CornerRightUp size={16} />
+                      <CornerRightUp className="h-4 w-4" />
                     )}
                   </div>
                 )}

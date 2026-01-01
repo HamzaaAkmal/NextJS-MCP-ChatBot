@@ -332,7 +332,7 @@ export function InteractiveTable(props: InteractiveTableProps) {
                     setSearchTerm(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="hover:bg-input bg-secondary/40 transition-colors border-transparent border-none! focus-visible:bg-input! ring-0!"
+                  className="hover:bg-input bg-secondary/40 transition-colors border-transparent !border-none focus-visible:!bg-input !ring-0"
                 />
               </div>
             )}

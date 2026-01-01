@@ -252,7 +252,7 @@ export const UserMessagePart = memo(
                       onClick={deleteMessage}
                       variant="ghost"
                       size="icon"
-                      className="size-3! p-4! hover:text-destructive"
+                      className="!size-3 !p-4 hover:text-destructive"
                     >
                       {isDeleting ? (
                         <Loader className="animate-spin" />
@@ -382,7 +382,7 @@ export const AssistMessagePart = memo(function AssistMessagePart({
                 data-testid="message-edit-button"
                 variant="ghost"
                 size="icon"
-                className="size-3! p-4!"
+                className="!size-3 !p-4"
                 onClick={() => copy(part.text)}
               >
                 {copied ? <Check /> : <Copy />}
@@ -400,7 +400,7 @@ export const AssistMessagePart = memo(function AssistMessagePart({
                         data-testid="message-edit-button data-[state=open]:bg-secondary!"
                         variant="ghost"
                         size="icon"
-                        className="size-3! p-4!"
+                        className="!size-3 !p-4"
                       >
                         {<RefreshCw />}
                       </Button>
@@ -416,7 +416,7 @@ export const AssistMessagePart = memo(function AssistMessagePart({
                     size="icon"
                     disabled={isDeleting}
                     onClick={deleteMessage}
-                    className="size-3! p-4! hover:text-destructive"
+                    className="!size-3 !p-4 hover:text-destructive"
                   >
                     {isDeleting ? (
                       <Loader className="animate-spin" />
@@ -438,7 +438,7 @@ export const AssistMessagePart = memo(function AssistMessagePart({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-3! p-4! opacity-0 group-hover/message:opacity-100 transition-opacity duration-300"
+                  className="!size-3 !p-4 opacity-0 group-hover/message:opacity-100 transition-opacity duration-300"
                 >
                   <EllipsisIcon />
                 </Button>
@@ -1146,7 +1146,7 @@ export const ToolMessagePart = memo(
                       onClick={deleteMessage}
                       variant="ghost"
                       size="icon"
-                      className="size-3! p-4! opacity-0 group-hover/message:opacity-100 hover:text-destructive"
+                      className="!size-3 !p-4 opacity-0 group-hover/message:opacity-100 hover:text-destructive"
                     >
                       {isDeleting ? (
                         <Loader className="animate-spin" />

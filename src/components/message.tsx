@@ -63,10 +63,10 @@ const PurePreviewMessage = ({
   if (!partsForDisplay.length) return null;
 
   return (
-    <div className="w-full mx-auto max-w-3xl px-6 group/message">
+    <div className="w-full mx-auto max-w-3xl px-4 md:px-6 py-2 md:py-3 group/message">
       <div
         className={cn(
-          "flex gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl",
+          "flex gap-3 md:gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl",
           className,
         )}
       >

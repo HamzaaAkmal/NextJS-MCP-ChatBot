@@ -47,7 +47,7 @@ export const pgAgentRepository: AgentRepository = {
       .leftJoin(
         BookmarkTable,
         and(
-          eq(BookmarkTable.itemId, AgentTable.id),
+          sql`${BookmarkTable.itemId}::uuid = ${AgentTable.id}`,
           eq(BookmarkTable.userId, userId),
           eq(BookmarkTable.itemType, "agent"),
         ),
@@ -212,7 +212,7 @@ export const pgAgentRepository: AgentRepository = {
       .leftJoin(
         BookmarkTable,
         and(
-          eq(BookmarkTable.itemId, AgentTable.id),
+          sql`${BookmarkTable.itemId}::uuid = ${AgentTable.id}`,
           eq(BookmarkTable.itemType, "agent"),
           eq(BookmarkTable.userId, currentUserId),
         ),
@@ -242,7 +242,7 @@ export const pgAgentRepository: AgentRepository = {
         userId: AgentTable.userId,
       })
       .from(AgentTable)
-      .where(eq(AgentTable.id, agentId));
+      .where(sql`${AgentTable.id} = ${agentId}::uuid`);
     if (!agent) {
       return false;
     }

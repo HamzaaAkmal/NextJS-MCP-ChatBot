@@ -76,7 +76,7 @@ export function UserStatusBadge({
         )}
       >
         {tCommon("banned")}
-        {canModify && <Edit2 className="size-2.5!" />}
+        {canModify && <Edit2 className="!size-2.5" />}
       </Badge>
     ) : (
       <Badge
@@ -88,7 +88,7 @@ export function UserStatusBadge({
         )}
       >
         {tCommon("active")}
-        {canModify && <Edit2 className="size-2.5!" />}
+        {canModify && <Edit2 className="!size-2.5" />}
       </Badge>
     );
 

@@ -405,7 +405,7 @@ export default function EditAgent({
                 onChange={(e) => setAgent({ name: e.target.value })}
                 autoFocus
                 disabled={isLoading || !hasEditAccess}
-                className="hover:bg-input bg-secondary/40 transition-colors border-transparent border-none! focus-visible:bg-input! ring-0!"
+                className="hover:bg-input bg-secondary/40 transition-colors border-transparent !border-none focus-visible:!bg-input !ring-0"
                 id="agent-name"
                 data-testid="agent-name-input"
                 placeholder={t("Agent.agentNamePlaceholder")}
@@ -436,7 +436,7 @@ export default function EditAgent({
               data-testid="agent-description-input"
               disabled={isLoading || !hasEditAccess}
               placeholder={t("Agent.agentDescriptionPlaceholder")}
-              className="hover:bg-input placeholder:text-xs bg-secondary/40 transition-colors border-transparent border-none! focus-visible:bg-input! ring-0!"
+              className="hover:bg-input placeholder:text-xs bg-secondary/40 transition-colors border-transparent !border-none focus-visible:!bg-input !ring-0"
               value={agent.description || ""}
               onChange={(e) => setAgent({ description: e.target.value })}
               readOnly={!hasEditAccess}
@@ -461,7 +461,7 @@ export default function EditAgent({
                 data-testid="agent-role-input"
                 disabled={isLoading || !hasEditAccess}
                 placeholder={t("Agent.agentRolePlaceholder")}
-                className="hover:bg-input placeholder:text-xs bg-secondary/40 w-44 transition-colors border-transparent border-none! focus-visible:bg-input! ring-0!"
+                className="hover:bg-input placeholder:text-xs bg-secondary/40 w-44 transition-colors border-transparent !border-none focus-visible:!bg-input !ring-0"
                 value={agent.instructions?.role || ""}
                 onChange={(e) =>
                   setAgent({
@@ -490,7 +490,7 @@ export default function EditAgent({
                 ref={textareaRef}
                 disabled={isLoading || !hasEditAccess}
                 placeholder={t("Agent.agentInstructionsPlaceholder")}
-                className="p-6 hover:bg-input min-h-48 max-h-96 overflow-y-auto resize-none placeholder:text-xs bg-secondary/40 transition-colors border-transparent border-none! focus-visible:bg-input! ring-0!"
+                className="p-6 hover:bg-input min-h-48 max-h-96 overflow-y-auto resize-none placeholder:text-xs bg-secondary/40 transition-colors border-transparent !border-none focus-visible:!bg-input !ring-0"
                 value={agent.instructions?.systemPrompt || ""}
                 onChange={(e) =>
                   setAgent({

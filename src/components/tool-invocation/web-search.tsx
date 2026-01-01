@@ -40,7 +40,7 @@ function PureWebSearchToolInvocation({ part }: WebSearchToolInvocationProps) {
             {t("Chat.Tool.searchOptions")}
           </span>
         </HoverCardTrigger>
-        <HoverCardContent className="max-w-xs md:max-w-md! w-full! overflow-auto flex flex-col">
+        <HoverCardContent className="max-w-xs md:!max-w-md !w-full overflow-auto flex flex-col">
           <p className="text-xs text-muted-foreground px-2 mb-2">
             {t("Chat.Tool.searchOptionsDescription")}
           </p>

@@ -1,9 +1,9 @@
 import { defineConfig } from "drizzle-kit";
 import "load-env";
 
-const dialect = "sqlite";
+const dialect = "postgresql";
 
-const url = process.env.POSTGRES_URL || "./data/better-chatbot.db";
+const url = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL || "";
 
 const schema = "./src/lib/db/pg/schema.pg.ts";
 

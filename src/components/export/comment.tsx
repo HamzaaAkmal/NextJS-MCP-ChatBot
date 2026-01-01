@@ -83,7 +83,7 @@ export default function Comment({
               variant="ghost"
               size="sm"
               onClick={() => onReply?.()}
-              className="text-xs! p-0! hover:bg-transparent!"
+              className="!text-xs !p-0 !hover:bg-transparent"
             >
               <CornerDownRightIcon className="size-3" />
               Reply
@@ -96,7 +96,7 @@ export default function Comment({
               size="sm"
               onClick={handleDelete}
               disabled={isDeleting}
-              className="text-xs! hover:text-destructive p-0! hover:bg-transparent!"
+              className="!text-xs hover:text-destructive !p-0 !hover:bg-transparent"
             >
               {isDeleting ? "Deleting..." : "Delete"}
             </Button>

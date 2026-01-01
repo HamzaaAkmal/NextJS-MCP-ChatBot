@@ -118,7 +118,7 @@ export function GenerateAgentDialog({
                   submitGenerateAgent();
                 }
               }}
-              className="w-full break-all pb-6 border-none! ring-0! resize-none min-h-24 max-h-48 overflow-y-auto placeholder:text-xs transition-colors"
+              className="w-full break-all pb-6 !border-none !ring-0 resize-none min-h-24 max-h-48 overflow-y-auto placeholder:text-xs transition-colors"
             />
             <div className="flex justify-end items-center gap-2">
               <SelectModel

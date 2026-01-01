@@ -85,7 +85,7 @@ class VoiceActivityDetector {
   constructor(
     stream: MediaStream,
     onSpeechStart?: () => void,
-    onSpeechEnd?: () => void
+    onSpeechEnd?: () => void,
   ) {
     this.onSpeechStart = onSpeechStart ?? null;
     this.onSpeechEnd = onSpeechEnd ?? null;
@@ -98,7 +98,9 @@ class VoiceActivityDetector {
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = 256;
     source.connect(this.analyser);
-    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount) as Uint8Array<ArrayBuffer>;
+    this.dataArray = new Uint8Array(
+      this.analyser.frequencyBinCount,
+    ) as Uint8Array<ArrayBuffer>;
     this.startMonitoring();
   }
 
@@ -161,10 +163,16 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
   const audioElement = useRef<HTMLAudioElement | null>(null);
   const vadRef = useRef<VoiceActivityDetector | null>(null);
   const isProcessing = useRef(false);
-  const conversationHistory = useRef<Array<{ role: string; content: string; tool_calls?: any[]; tool_call_id?: string; name?: string }>>(
-    []
-  );
-  
+  const conversationHistory = useRef<
+    Array<{
+      role: string;
+      content: string;
+      tool_calls?: any[];
+      tool_call_id?: string;
+      name?: string;
+    }>
+  >([]);
+
   // Session state
   const sessionRef = useRef<{
     systemPrompt: string;
@@ -193,14 +201,16 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
     }
 
     const session = await response.json();
-    
+
     sessionRef.current = {
       systemPrompt: session.systemPrompt,
       tools: session.tools,
       threadId: session.threadId, // Use threadId from server
     };
 
-    console.log(`[Groq Voice] Session initialized with ${session.tools.length} tools, thread: ${session.threadId}`);
+    console.log(
+      `[Groq Voice] Session initialized with ${session.tools.length} tools, thread: ${session.threadId}`,
+    );
   }, [props?.agentId, props?.toolMentions]);
 
   // Handle built-in voice tools
@@ -217,7 +227,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
           return "Unknown tool";
       }
     },
-    [setTheme]
+    [setTheme],
   );
 
   // Execute MCP tool
@@ -228,7 +238,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
         const result = await callMcpToolByServerNameAction(
           toolId.serverName,
           toolId.toolName,
-          args
+          args,
         );
         return JSON.stringify(result).slice(0, 15000);
       } catch (err) {
@@ -236,27 +246,30 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
         return JSON.stringify({ error: String(err) });
       }
     },
-    []
+    [],
   );
 
   // Transcribe audio using Groq Whisper
-  const transcribeAudio = useCallback(async (audioBlob: Blob): Promise<string> => {
-    const formData = new FormData();
-    formData.append("audio", audioBlob, "recording.webm");
+  const transcribeAudio = useCallback(
+    async (audioBlob: Blob): Promise<string> => {
+      const formData = new FormData();
+      formData.append("audio", audioBlob, "recording.webm");
 
-    const response = await fetch("/api/chat/groq-voice/transcribe", {
-      method: "POST",
-      body: formData,
-    });
+      const response = await fetch("/api/chat/groq-voice/transcribe", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "Failed to transcribe audio");
-    }
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to transcribe audio");
+      }
 
-    const result = await response.json();
-    return result.text;
-  }, []);
+      const result = await response.json();
+      return result.text;
+    },
+    [],
+  );
 
   // Synthesize speech using Groq TTS
   const synthesizeSpeech = useCallback(
@@ -301,7 +314,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
         throw err;
       }
     },
-    [voice]
+    [voice],
   );
 
   // Get LLM response with tool support
@@ -311,7 +324,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
       conversationHistory.current.push({ role: "user", content: userText });
 
       let shouldEndConversation = false;
-      let maxIterations = 5; // Prevent infinite tool loops
+      const maxIterations = 5; // Prevent infinite tool loops
       let iteration = 0;
       let finalResponse = "";
 
@@ -342,7 +355,9 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
 
         // Handle tool calls
         if (data.type === "tool_calls" && data.toolCalls?.length > 0) {
-          console.log(`[Groq Voice] Processing ${data.toolCalls.length} tool calls`);
+          console.log(
+            `[Groq Voice] Processing ${data.toolCalls.length} tool calls`,
+          );
 
           // Add assistant message with tool calls to history
           conversationHistory.current.push({
@@ -379,7 +394,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
             // Check if it's a built-in voice tool
             if (DEFAULT_VOICE_TOOLS.some((t) => t.name === toolName)) {
               toolResult = await handleBuiltInTool(toolName, toolArgs);
-              
+
               if (toolName === "endConversation") {
                 shouldEndConversation = true;
               }
@@ -405,8 +420,8 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
                       ],
                       completed: true,
                     }
-                  : m
-              )
+                  : m,
+              ),
             );
 
             // Add tool result to conversation history
@@ -450,7 +465,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
 
       return finalResponse;
     },
-    [handleBuiltInTool, executeMcpTool]
+    [handleBuiltInTool, executeMcpTool],
   );
 
   // Process recorded audio
@@ -550,6 +565,11 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
 
   const startListening = useCallback(async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+          "getUserMedia is not supported in this browser or context. Please use HTTPS or check browser compatibility.",
+        );
+      }
       if (!audioStream.current) {
         audioStream.current = await navigator.mediaDevices.getUserMedia({
           audio: {
@@ -568,7 +588,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
       vadRef.current = new VoiceActivityDetector(
         audioStream.current,
         startRecording,
-        stopRecording
+        stopRecording,
       );
 
       setIsListening(true);
@@ -584,7 +604,10 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
         vadRef.current = null;
       }
 
-      if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
+      if (
+        mediaRecorder.current &&
+        mediaRecorder.current.state === "recording"
+      ) {
         mediaRecorder.current.stop();
       }
 
@@ -614,6 +637,11 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
       await initializeSession();
 
       // Request microphone access
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+          "getUserMedia is not supported in this browser or context. Please use HTTPS or check browser compatibility.",
+        );
+      }
       audioStream.current = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
@@ -626,7 +654,7 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
       vadRef.current = new VoiceActivityDetector(
         audioStream.current,
         startRecording,
-        stopRecording
+        stopRecording,
       );
 
       setIsActive(true);

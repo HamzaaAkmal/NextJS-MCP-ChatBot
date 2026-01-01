@@ -146,7 +146,7 @@ export const WorkflowPanel = memo(
                   backgroundColor: workflow.icon?.style?.backgroundColor,
                 }}
                 onClick={() => setIsEditing(true)}
-                className="border transition-colors hover:bg-secondary! group items-center justify-center flex w-8 h-8 rounded-md ring ring-background hover:ring-ring"
+                className="border transition-colors !hover:bg-secondary group items-center justify-center flex w-8 h-8 rounded-md ring ring-background hover:ring-ring"
               >
                 <Avatar className="size-6">
                   <AvatarImage

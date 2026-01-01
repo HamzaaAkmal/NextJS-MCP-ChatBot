@@ -84,7 +84,7 @@ export function WorkflowToolSelect({
           <Button
             variant={"outline"}
             size={"lg"}
-            className="border data-[state=open]:bg-input!"
+            className="border data-[state=open]:!bg-input"
           >
             {selectedToolLabel}
             <ChevronDownIcon className="size-3.5 ml-auto" />

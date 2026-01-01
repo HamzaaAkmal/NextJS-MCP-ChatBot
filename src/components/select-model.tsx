@@ -47,7 +47,7 @@ export const SelectModel = (props: PropsWithChildren<SelectModelProps>) => {
           <Button
             variant={"secondary"}
             size={"sm"}
-            className="data-[state=open]:bg-input! hover:bg-input! "
+            className="data-[state=open]:!bg-input !hover:bg-input "
             data-testid="model-selector-button"
           >
             <div className="mr-auto flex items-center gap-1">

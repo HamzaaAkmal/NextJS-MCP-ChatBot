@@ -219,7 +219,7 @@ export function AppSidebarThreads() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="data-[state=open]:bg-input! opacity-0 data-[state=open]:opacity-100! group-hover/threads:opacity-100 transition-opacity"
+                            className="data-[state=open]:!bg-input opacity-0 data-[state=open]:!opacity-100 group-hover/threads:opacity-100 transition-opacity"
                           >
                             <MoreHorizontal />
                           </Button>
@@ -255,12 +255,12 @@ export function AppSidebarThreads() {
                           threadId={thread.id}
                           beforeTitle={thread.title}
                         >
-                          <div className="flex items-center data-[state=open]:bg-input! group-hover/thread:bg-input! rounded-lg">
+                          <div className="flex items-center data-[state=open]:!bg-input group-hover/thread:!bg-input rounded-lg">
                             <Tooltip delayDuration={1000}>
                               <TooltipTrigger asChild>
                                 <SidebarMenuButton
                                   asChild
-                                  className="group-hover/thread:bg-transparent!"
+                                  className="group-hover/thread:!bg-transparent"
                                   isActive={currentThreadId === thread.id}
                                 >
                                   <Link
@@ -309,7 +309,7 @@ export function AppSidebarThreads() {
               <Button
                 variant="secondary"
                 size="sm"
-                className="w-full hover:bg-input! justify-start"
+                className="w-full !hover:bg-input justify-start"
                 onClick={() => setIsExpanded(!isExpanded)}
               >
                 <MoreHorizontal className="mr-2" />

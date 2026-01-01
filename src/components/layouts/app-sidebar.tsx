@@ -36,7 +36,7 @@ export function AppSidebar({
   return (
     <Sidebar
       collapsible="offcanvas"
-      className="border-r border-sidebar-border/80"
+      className="border-r border-sidebar-border/80 touch-manipulation"
     >
       <SidebarHeaderShared
         title="better-chatbot"
@@ -48,14 +48,14 @@ export function AppSidebar({
         }}
       />
 
-      <SidebarContent className="mt-2 overflow-hidden relative">
-        <div className="flex flex-col overflow-y-auto">
+      <SidebarContent className="mt-2 overflow-hidden relative smooth-scroll">
+        <div className="flex flex-col overflow-y-auto mobile-hide-scrollbar">
           <AppSidebarMenus user={user} />
           <AppSidebarAgents userRole={userRole} />
           <AppSidebarThreads />
         </div>
       </SidebarContent>
-      <SidebarFooter className="flex flex-col items-stretch space-y-2">
+      <SidebarFooter className="flex flex-col items-stretch space-y-2 pb-safe">
         <AppSidebarUser user={user} />
       </SidebarFooter>
     </Sidebar>

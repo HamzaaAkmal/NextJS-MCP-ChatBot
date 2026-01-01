@@ -3,66 +3,75 @@ import { UserPreferences } from "app-types/user";
 import { MCPServerConfig } from "app-types/mcp";
 import { sql } from "drizzle-orm";
 import {
-  sqliteTable,
+  pgTable,
   text,
-  integer,
+  boolean,
   unique,
   index,
-} from "drizzle-orm/sqlite-core";
+  uuid,
+  timestamp,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import { isNotNull } from "drizzle-orm";
 import { DBWorkflow, DBEdge, DBNode } from "app-types/workflow";
 import { UIMessage } from "ai";
 import { ChatMetadata } from "app-types/chat";
 import { TipTapMentionJsonContent } from "@/types/util";
 
-export const ChatThreadTable = sqliteTable("chat_thread", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const ChatThreadTable = pgTable("chat_thread", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   title: text("title").notNull(),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const ChatMessageTable = sqliteTable("chat_message", {
-  id: text("id").primaryKey().notNull(),
-  threadId: text("thread_id")
+export const ChatMessageTable = pgTable("chat_message", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  threadId: uuid("thread_id")
     .notNull()
     .references(() => ChatThreadTable.id, { onDelete: "cascade" }),
   role: text("role").notNull().$type<UIMessage["role"]>(),
-  parts: text("parts", { mode: "json" }).notNull().$type<UIMessage["parts"]>(),
-  metadata: text("metadata", { mode: "json" }).$type<ChatMetadata>(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  parts: jsonb("parts").notNull().$type<UIMessage["parts"]>(),
+  metadata: jsonb("metadata").$type<ChatMetadata>(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const AgentTable = sqliteTable("agent", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const AgentTable = pgTable("agent", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
   description: text("description"),
-  icon: text("icon", { mode: "json" }).$type<Agent["icon"]>(),
-  userId: text("user_id")
+  icon: jsonb("icon").$type<Agent["icon"]>(),
+  userId: uuid("user_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  instructions: text("instructions", { mode: "json" }).$type<Agent["instructions"]>(),
-  visibility: text("visibility")
+  instructions: jsonb("instructions").$type<Agent["instructions"]>(),
+  visibility: text("visibility").notNull().default("private"),
+  createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default("private"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const BookmarkTable = sqliteTable(
+export const BookmarkTable = pgTable(
   "bookmark",
   {
-    id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: text("user_id")
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    userId: uuid("user_id")
       .notNull()
       .references(() => UserTable.id, { onDelete: "cascade" }),
     itemId: text("item_id").notNull(),
     itemType: text("item_type").notNull(),
-    createdAt: integer("created_at", { mode: "timestamp" })
+    createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (table) => ({
     unq: unique().on(table.userId, table.itemId, table.itemType),
@@ -71,127 +80,141 @@ export const BookmarkTable = sqliteTable(
   }),
 );
 
-export const McpServerTable = sqliteTable("mcp_server", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const McpServerTable = pgTable("mcp_server", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
-  config: text("config", { mode: "json" }).notNull().$type<MCPServerConfig>(),
-  enabled: integer("enabled", { mode: "boolean" }).notNull().default(true),
-  userId: text("user_id")
+  config: jsonb("config").notNull().$type<MCPServerConfig>(),
+  enabled: boolean("enabled").notNull().default(true),
+  userId: uuid("user_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  visibility: text("visibility")
+  visibility: text("visibility").notNull().default("private"),
+  createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default("private"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const UserTable = sqliteTable("user", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const UserTable = pgTable("user", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  emailVerified: integer("email_verified", { mode: "boolean" }).default(false).notNull(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
   password: text("password"),
   image: text("image"),
-  preferences: text("preferences", { mode: "json" }).default("{}").$type<UserPreferences>(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  banned: integer("banned", { mode: "boolean" }),
+  preferences: jsonb("preferences").default("{}").$type<UserPreferences>(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  banned: boolean("banned"),
   banReason: text("ban_reason"),
-  banExpires: integer("ban_expires", { mode: "timestamp" }),
+  banExpires: timestamp("ban_expires", { withTimezone: true }),
   role: text("role").notNull().default("user"),
 });
 
 // Role tables removed - using Better Auth's built-in role system
 // Roles are now managed via the 'role' field on UserTable
 
-export const SessionTable = sqliteTable("session", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+export const SessionTable = pgTable("session", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   token: text("token").notNull().unique(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
   // Admin plugin field (from better-auth generated schema)
   impersonatedBy: text("impersonated_by"),
 });
 
-export const AccountTable = sqliteTable("account", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const AccountTable = pgTable("account", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
-  accessTokenExpiresAt: integer("access_token_expires_at", { mode: "timestamp" }),
-  refreshTokenExpiresAt: integer("refresh_token_expires_at", { mode: "timestamp" }),
+  accessTokenExpiresAt: timestamp("access_token_expires_at", {
+    withTimezone: true,
+  }),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+    withTimezone: true,
+  }),
   scope: text("scope"),
   password: text("password"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const VerificationTable = sqliteTable("verification", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const VerificationTable = pgTable("verification", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
-  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
-    () => /* @__PURE__ */ new Date(),
-  ),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(
-    () => /* @__PURE__ */ new Date(),
-  ),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 // Tool customization table for per-user additional instructions
-export const McpToolCustomizationTable = sqliteTable(
+export const McpToolCustomizationTable = pgTable(
   "mcp_server_tool_custom_instructions",
   {
-    id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: text("user_id")
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    userId: uuid("user_id")
       .notNull()
       .references(() => UserTable.id, { onDelete: "cascade" }),
     toolName: text("tool_name").notNull(),
-    mcpServerId: text("mcp_server_id")
+    mcpServerId: uuid("mcp_server_id")
       .notNull()
       .references(() => McpServerTable.id, { onDelete: "cascade" }),
     prompt: text("prompt"),
-    createdAt: integer("created_at", { mode: "timestamp" })
+    createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (table) => ({
     unq: unique().on(table.userId, table.toolName, table.mcpServerId),
   }),
 );
 
-export const McpServerCustomizationTable = sqliteTable(
+export const McpServerCustomizationTable = pgTable(
   "mcp_server_custom_instructions",
   {
-    id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-    userId: text("user_id")
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    userId: uuid("user_id")
       .notNull()
       .references(() => UserTable.id, { onDelete: "cascade" }),
-    mcpServerId: text("mcp_server_id")
+    mcpServerId: uuid("mcp_server_id")
       .notNull()
       .references(() => McpServerTable.id, { onDelete: "cascade" }),
     prompt: text("prompt"),
-    createdAt: integer("created_at", { mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
       .notNull(),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
       .notNull(),
   },
   (table) => ({
@@ -199,113 +222,123 @@ export const McpServerCustomizationTable = sqliteTable(
   }),
 );
 
-export const WorkflowTable = sqliteTable("workflow", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const WorkflowTable = pgTable("workflow", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   version: text("version").notNull().default("0.1.0"),
   name: text("name").notNull(),
-  icon: text("icon", { mode: "json" }).$type<DBWorkflow["icon"]>(),
+  icon: jsonb("icon").$type<DBWorkflow["icon"]>(),
   description: text("description"),
-  isPublished: integer("is_published", { mode: "boolean" }).notNull().default(false),
-  visibility: text("visibility")
-    .notNull()
-    .default("private"),
-  userId: text("user_id")
+  isPublished: boolean("is_published").notNull().default(false),
+  visibility: text("visibility").notNull().default("private"),
+  userId: uuid("user_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const WorkflowNodeDataTable = sqliteTable(
+export const WorkflowNodeDataTable = pgTable(
   "workflow_node",
   {
-    id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
     version: text("version").notNull().default("0.1.0"),
-    workflowId: text("workflow_id")
+    workflowId: uuid("workflow_id")
       .notNull()
       .references(() => WorkflowTable.id, { onDelete: "cascade" }),
     kind: text("kind").notNull(),
     name: text("name").notNull(),
     description: text("description"),
-    uiConfig: text("ui_config", { mode: "json" }).$type<DBNode["uiConfig"]>().default("{}"),
-    nodeConfig: text("node_config", { mode: "json" })
+    uiConfig: jsonb("ui_config").$type<DBNode["uiConfig"]>().default("{}"),
+    nodeConfig: jsonb("node_config")
       .$type<Partial<DBNode["nodeConfig"]>>()
       .default("{}"),
-    createdAt: integer("created_at", { mode: "timestamp" })
+    createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (t) => ({
     kindIdx: index("workflow_node_kind_idx").on(t.kind),
   }),
 );
 
-export const WorkflowEdgeTable = sqliteTable("workflow_edge", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const WorkflowEdgeTable = pgTable("workflow_edge", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   version: text("version").notNull().default("0.1.0"),
-  workflowId: text("workflow_id")
+  workflowId: uuid("workflow_id")
     .notNull()
     .references(() => WorkflowTable.id, { onDelete: "cascade" }),
-  source: text("source")
+  source: uuid("source")
     .notNull()
     .references(() => WorkflowNodeDataTable.id, { onDelete: "cascade" }),
-  target: text("target")
+  target: uuid("target")
     .notNull()
     .references(() => WorkflowNodeDataTable.id, { onDelete: "cascade" }),
-  uiConfig: text("ui_config", { mode: "json" }).$type<DBEdge["uiConfig"]>().default("{}"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  uiConfig: jsonb("ui_config").$type<DBEdge["uiConfig"]>().default("{}"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const ArchiveTable = sqliteTable("archive", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const ArchiveTable = pgTable("archive", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
   description: text("description"),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const ArchiveItemTable = sqliteTable(
+export const ArchiveItemTable = pgTable(
   "archive_item",
   {
-    id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    archiveId: text("archive_id")
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    archiveId: uuid("archive_id")
       .notNull()
       .references(() => ArchiveTable.id, { onDelete: "cascade" }),
     itemId: text("item_id").notNull(),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => UserTable.id, { onDelete: "cascade" }),
-    addedAt: integer("added_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    addedAt: timestamp("added_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (t) => ({
     itemIdIdx: index("archive_item_item_id_idx").on(t.itemId),
   }),
 );
 
-export const McpOAuthSessionTable = sqliteTable(
+export const McpOAuthSessionTable = pgTable(
   "mcp_oauth_session",
   {
-    id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    mcpServerId: text("mcp_server_id")
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    mcpServerId: uuid("mcp_server_id")
       .notNull()
       .references(() => McpServerTable.id, { onDelete: "cascade" }),
     serverUrl: text("server_url").notNull(),
-    clientInfo: text("client_info", { mode: "json" }),
-    tokens: text("tokens", { mode: "json" }),
+    clientInfo: jsonb("client_info"),
+    tokens: jsonb("tokens"),
     codeVerifier: text("code_verifier"),
     state: text("state").unique(), // OAuth state parameter for current flow (unique for security)
-    createdAt: integer("created_at", { mode: "timestamp" })
+    createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (t) => ({
     serverIdIdx: index("mcp_oauth_session_server_id_idx").on(t.mcpServerId),
@@ -329,14 +362,14 @@ export type ToolCustomizationEntity =
 export type McpServerCustomizationEntity =
   typeof McpServerCustomizationTable.$inferSelect;
 
-export const ChatExportTable = sqliteTable("chat_export", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+export const ChatExportTable = pgTable("chat_export", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   title: text("title").notNull(),
-  exporterId: text("exporter_id")
+  exporterId: uuid("exporter_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  originalThreadId: text("original_thread_id"),
-  messages: text("messages", { mode: "json" }).notNull().$type<
+  originalThreadId: uuid("original_thread_id"),
+  messages: jsonb("messages").notNull().$type<
     Array<{
       id: string;
       role: UIMessage["role"];
@@ -344,26 +377,30 @@ export const ChatExportTable = sqliteTable("chat_export", {
       metadata?: ChatMetadata;
     }>
   >(),
-  exportedAt: integer("exported_at", { mode: "timestamp" })
+  exportedAt: timestamp("exported_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`),
-  expiresAt: integer("expires_at", { mode: "timestamp" }),
+    .defaultNow(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
 });
 
-export const ChatExportCommentTable = sqliteTable("chat_export_comment", {
-  id: text("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-  exportId: text("export_id")
+export const ChatExportCommentTable = pgTable("chat_export_comment", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  exportId: uuid("export_id")
     .notNull()
     .references(() => ChatExportTable.id, { onDelete: "cascade" }),
-  authorId: text("author_id")
+  authorId: uuid("author_id")
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  parentId: text("parent_id").references(() => ChatExportCommentTable.id, {
+  parentId: uuid("parent_id").references(() => ChatExportCommentTable.id, {
     onDelete: "cascade",
   }),
-  content: text("content", { mode: "json" }).notNull().$type<TipTapMentionJsonContent>(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  content: jsonb("content").notNull().$type<TipTapMentionJsonContent>(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export type ArchiveEntity = typeof ArchiveTable.$inferSelect;

@@ -304,7 +304,7 @@ export function ChatBotVoice() {
   return (
     <Drawer dismissible={false} open={voiceChat.isOpen} direction="top">
       <DrawerPortal>
-        <DrawerContent className="max-h-[100vh]! h-full border-none! rounded-none! flex flex-col bg-card">
+        <DrawerContent className="!max-h-[100vh] h-full !border-none !rounded-none flex flex-col bg-card">
           <div className="w-full h-full flex flex-col ">
             <div
               className="w-full flex p-6 gap-2"
@@ -423,7 +423,9 @@ export function ChatBotVoice() {
                             className="flex items-center gap-2"
                             icon=""
                           >
-                            <span className="size-3.5 flex items-center justify-center text-[10px] font-bold">G</span>
+                            <span className="size-3.5 flex items-center justify-center text-[10px] font-bold">
+                              G
+                            </span>
                             Groq
                           </DropdownMenuSubTrigger>
                           <DropdownMenuPortal>
@@ -718,7 +720,7 @@ function CompactMessageView({
                   </Button>
                 </div>
               </DialogTrigger>
-              <DialogContent className="z-50 md:max-w-2xl! max-h-[80vh] overflow-y-auto p-8">
+              <DialogContent className="z-50 md:!max-w-2xl max-h-[80vh] overflow-y-auto p-8">
                 <DialogTitle>{getToolName(toolPart)}</DialogTitle>
                 <div className="flex flex-row gap-4 text-sm ">
                   <div className="w-1/2 min-w-0 flex flex-col">

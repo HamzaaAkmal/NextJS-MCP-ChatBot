@@ -118,7 +118,7 @@ export default function Comments({
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
 
       <DrawerContent
-        className="select-text! w-full lg:w-md border-none! bg-transparent! p-4"
+        className="!select-text w-full lg:w-md !border-none !bg-transparent p-4"
         disableOverlay
       >
         <DrawerTitle className="sr-only">Comments</DrawerTitle>

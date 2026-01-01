@@ -57,12 +57,13 @@ export function AppHeader() {
   }, [currentPaths, searchParams]);
 
   return (
-    <header className="sticky top-0 z-50 flex items-center px-3 py-2">
+    <header className="sticky top-0 z-50 flex items-center px-3 py-3 md:py-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 safe-top">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
+            className="h-10 w-10 md:h-9 md:w-9 touch-manipulation"
             aria-label="Toggle Sidebar"
             onClick={(e) => {
               e.preventDefault();
@@ -72,7 +73,7 @@ export function AppHeader() {
             data-testid="sidebar-toggle"
             data-state={open ? "open" : "closed"}
           >
-            <PanelLeft />
+            <PanelLeft className="h-5 w-5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent align="start" side="bottom">
@@ -209,7 +210,7 @@ function ThreadDropdownComponent() {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                className="data-[state=open]:bg-input! hover:text-foreground cursor-pointer flex gap-1 items-center px-2 py-1 rounded-md hover:bg-accent"
+                className="data-[state=open]:!bg-input hover:text-foreground cursor-pointer flex gap-1 items-center px-2 py-1 rounded-md hover:bg-accent"
               >
                 {generatingTitleThreadIds.includes(currentThread.id) ? (
                   <TextShimmer className="truncate max-w-60 min-w-0 mr-1">

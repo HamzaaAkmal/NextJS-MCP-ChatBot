@@ -238,7 +238,7 @@ function NextNodeConnector({
           <Button
             size={"lg"}
             variant="ghost"
-            className="data-[state=open]:bg-secondary! text-xs w-full text-muted-foreground border border-dashed justify-start"
+            className="data-[state=open]:!bg-secondary text-xs w-full text-muted-foreground border border-dashed justify-start"
           >
             <PlusIcon className="size-3" />
             <span>{t("Workflow.addNextNode")}</span>

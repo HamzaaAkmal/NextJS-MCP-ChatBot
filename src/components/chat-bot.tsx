@@ -429,7 +429,9 @@ export default function ChatBot({ threadId, initialMessages }: Props) {
         ) : (
           <>
             <div
-              className={"flex flex-col gap-2 overflow-y-auto py-6 z-10"}
+              className={
+                "flex flex-col gap-2 md:gap-3 overflow-y-auto py-4 md:py-6 z-10"
+              }
               ref={containerRef}
               onScroll={handleScroll}
             >
@@ -478,7 +480,7 @@ export default function ChatBot({ threadId, initialMessages }: Props) {
 
         <div
           className={clsx(
-            messages.length && "absolute bottom-14",
+            messages.length && "absolute bottom-0 md:bottom-14 pb-safe",
             "w-full z-10",
           )}
         >
@@ -574,11 +576,11 @@ function ScrollToBottomButton({
         >
           <Button
             onClick={onClick}
-            className="shadow-lg backdrop-blur-sm border transition-colors"
+            className="shadow-lg backdrop-blur-sm border transition-colors h-10 w-10 md:h-9 md:w-9"
             size="icon"
             variant="ghost"
           >
-            <ArrowDown />
+            <ArrowDown className="h-5 w-5 md:h-4 md:w-4" />
           </Button>
         </motion.div>
       )}

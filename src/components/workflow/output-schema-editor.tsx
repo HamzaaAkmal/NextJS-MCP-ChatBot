@@ -318,7 +318,7 @@ Return ONLY the JSON Schema object - no explanations or markdown formatting.`,
                   <CardHeader className="sr-only">
                     <CardTitle>Schema Fields</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2 px-0!">
+                  <CardContent className="space-y-2 !px-0">
                     {fields.map((field, index) => (
                       <div
                         key={field.key || index}

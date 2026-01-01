@@ -231,7 +231,7 @@ export const LLMNodeDataConfig = memo(function ({
                 <Button
                   variant={"ghost"}
                   size={"icon"}
-                  className="ml-auto size-7 hover:bg-destructive/10! hover:text-destructive"
+                  className="ml-auto size-7 !hover:bg-destructive/10 hover:text-destructive"
                   onClick={() => removeMessage(index)}
                 >
                   <TrashIcon className="size-3 hover:text-destructive" />
