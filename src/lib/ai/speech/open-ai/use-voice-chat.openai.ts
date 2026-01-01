@@ -432,7 +432,7 @@ export function useOpenAIVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
       });
       dc.addEventListener("open", () => {
         setIsActive(true);
-        setIsListening(true);
+        setIsListening(false); // Don't auto-listen, wait for user to press Win+V
         setIsLoading(false);
       });
       dc.addEventListener("close", () => {

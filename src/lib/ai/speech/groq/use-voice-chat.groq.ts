@@ -650,15 +650,11 @@ export function useGroqVoiceChat(props?: VoiceChatOptions): VoiceChatSession {
         },
       });
 
-      // Setup VAD for automatic speech detection
-      vadRef.current = new VoiceActivityDetector(
-        audioStream.current,
-        startRecording,
-        stopRecording,
-      );
+      // Don't setup VAD here - only when user presses push-to-talk
+      // VAD will be initialized in startListening()
 
       setIsActive(true);
-      setIsListening(true);
+      setIsListening(false); // Don't auto-listen, wait for user to press Win+V
       setIsLoading(false);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));

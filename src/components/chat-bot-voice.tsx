@@ -95,6 +95,9 @@ export function ChatBotVoice() {
 
   const [isClosing, setIsClosing] = useState(false);
   const startAudio = useRef<HTMLAudioElement>(null);
+  const [isPushToTalkActive, setIsPushToTalkActive] = useState(false);
+  const pushToTalkTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const longPressThreshold = 300; // milliseconds to detect long press
   const [useCompactView, setUseCompactView] = useState(true);
 
   const toolMentions = useMemo<ChatMention[]>(() => {
@@ -166,6 +169,82 @@ export function ChatBotVoice() {
     });
   }, [start]);
 
+  // Push-to-talk handlers
+  const handlePushToTalkStart = useCallback(() => {
+    if (!isActive || isLoading || isClosing) return;
+
+    pushToTalkTimerRef.current = setTimeout(() => {
+      setIsPushToTalkActive(true);
+      if (!isListening) {
+        startListening();
+      }
+    }, longPressThreshold);
+  }, [
+    isActive,
+    isLoading,
+    isClosing,
+    isListening,
+    startListening,
+    longPressThreshold,
+  ]);
+
+  const handlePushToTalkEnd = useCallback(() => {
+    if (pushToTalkTimerRef.current) {
+      clearTimeout(pushToTalkTimerRef.current);
+      pushToTalkTimerRef.current = null;
+    }
+
+    if (isPushToTalkActive && isListening) {
+      stopListening();
+      setIsPushToTalkActive(false);
+    }
+  }, [isPushToTalkActive, isListening, stopListening]);
+
+  // Keyboard shortcut for push-to-talk (Ctrl+Z)
+  useEffect(() => {
+    if (!voiceChat.isOpen || !isActive) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Ctrl+Z
+      if (e.ctrlKey && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isPushToTalkActive && !isListening && !isLoading && !isClosing) {
+          setIsPushToTalkActive(true);
+          startListening();
+        }
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      // Release on Ctrl or Z key up
+      if (e.key === "Control" || e.key.toLowerCase() === "z") {
+        if (isPushToTalkActive && isListening) {
+          stopListening();
+          setIsPushToTalkActive(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [
+    voiceChat.isOpen,
+    isActive,
+    isPushToTalkActive,
+    isListening,
+    isLoading,
+    isClosing,
+    startListening,
+    stopListening,
+  ]);
+
   const endVoiceChat = useCallback(async () => {
     setIsClosing(true);
     await safe(() => stop());
@@ -192,16 +271,29 @@ export function ChatBotVoice() {
           {t("VoiceChat.startVoiceChat")}
         </p>
       );
-    if (!isListening)
+    if (isPushToTalkActive && isListening)
       return (
-        <p className="fade-in animate-in duration-3000" key="stop">
-          {t("VoiceChat.yourMicIsOff")}
+        <p
+          className="fade-in animate-in duration-3000 text-primary font-semibold"
+          key="recording"
+        >
+          🎙️ Recording... Release to send
+        </p>
+      );
+    if (!isListening && !isAssistantSpeaking && messages.length > 0)
+      return (
+        <p className="fade-in animate-in duration-3000" key="ready">
+          Hold button or press{" "}
+          <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Ctrl+Z</kbd>{" "}
+          to speak
         </p>
       );
     if (!isAssistantSpeaking && messages.length === 0) {
       return (
         <p className="fade-in animate-in duration-3000" key="ready">
-          {t("VoiceChat.readyWhenYouAreJustStartTalking")}
+          Hold button or{" "}
+          <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs">Ctrl+Z</kbd>{" "}
+          to speak
         </p>
       );
     }
@@ -211,7 +303,7 @@ export function ChatBotVoice() {
     if (!isAssistantSpeaking && !isUserSpeaking) {
       return (
         <p className="delayed-fade-in" key="ready">
-          {t("VoiceChat.readyWhenYouAreJustStartTalking")}
+          Hold the button to speak
         </p>
       );
     }
@@ -221,6 +313,7 @@ export function ChatBotVoice() {
     isActive,
     isLoading,
     isListening,
+    isPushToTalkActive,
     messages.length,
     useCompactView,
   ]);
@@ -529,45 +622,45 @@ export function ChatBotVoice() {
                     onClick={() => {
                       if (!isActive) {
                         startWithSound();
-                      } else if (isListening) {
-                        stopListening();
-                      } else {
-                        startListening();
                       }
                     }}
+                    onMouseDown={handlePushToTalkStart}
+                    onMouseUp={handlePushToTalkEnd}
+                    onMouseLeave={handlePushToTalkEnd}
+                    onTouchStart={handlePushToTalkStart}
+                    onTouchEnd={handlePushToTalkEnd}
+                    onTouchCancel={handlePushToTalkEnd}
                     className={cn(
-                      "rounded-full p-6 transition-colors duration-300",
+                      "rounded-full p-6 transition-colors duration-300 select-none",
 
                       isLoading
                         ? "bg-accent-foreground text-accent animate-pulse"
                         : !isActive
                           ? "bg-green-500/10 text-green-500 hover:bg-green-500/30"
-                          : !isListening
-                            ? "bg-destructive/30 text-destructive hover:bg-destructive/10"
-                            : isUserSpeaking
-                              ? "bg-input text-foreground"
-                              : "",
+                          : isPushToTalkActive && isListening
+                            ? "bg-primary/30 text-primary scale-110"
+                            : !isListening
+                              ? "bg-muted/30 text-muted-foreground"
+                              : isUserSpeaking
+                                ? "bg-input text-foreground"
+                                : "",
                     )}
                   >
                     {isLoading || isClosing ? (
                       <Loader className="size-6 animate-spin" />
                     ) : !isActive ? (
                       <PhoneIcon className="size-6 fill-green-500 stroke-none" />
-                    ) : isListening ? (
-                      <MicIcon
-                        className={`size-6 ${isUserSpeaking ? "text-primary" : "text-muted-foreground transition-colors duration-300"}`}
-                      />
+                    ) : isPushToTalkActive && isListening ? (
+                      <MicIcon className="size-6 text-primary animate-pulse" />
                     ) : (
-                      <MicOffIcon className="size-6" />
+                      <MicIcon className="size-6 text-muted-foreground" />
                     )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   {!isActive
                     ? t("VoiceChat.startConversation")
-                    : isListening
-                      ? t("VoiceChat.closeMic")
-                      : t("VoiceChat.openMic")}
+                    : t("VoiceChat.holdToSpeak")}
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
