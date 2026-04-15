@@ -2,12 +2,14 @@ import { createPieChartTool } from "./visualization/create-pie-chart";
 import { createBarChartTool } from "./visualization/create-bar-chart";
 import { createLineChartTool } from "./visualization/create-line-chart";
 import { createTableTool } from "./visualization/create-table";
-import { exaSearchTool, exaContentsTool } from "./web/web-search";
+import { getWebSearchTools } from "./web/web-search";
 import { AppDefaultToolkit, DefaultToolName } from ".";
 import { Tool } from "ai";
 import { httpFetchTool } from "./http/fetch";
 import { jsExecutionTool } from "./code/js-run-tool";
 import { pythonExecutionTool } from "./code/python-run-tool";
+
+const { searchTool, contentTool } = getWebSearchTools();
 
 export const APP_DEFAULT_TOOL_KIT: Record<
   AppDefaultToolkit,
@@ -20,8 +22,8 @@ export const APP_DEFAULT_TOOL_KIT: Record<
     [DefaultToolName.CreateTable]: createTableTool,
   },
   [AppDefaultToolkit.WebSearch]: {
-    [DefaultToolName.WebSearch]: exaSearchTool,
-    [DefaultToolName.WebContent]: exaContentsTool,
+    [DefaultToolName.WebSearch]: searchTool,
+    [DefaultToolName.WebContent]: contentTool,
   },
   [AppDefaultToolkit.Http]: {
     [DefaultToolName.Http]: httpFetchTool,

@@ -26,10 +26,7 @@ import { jsonSchemaToZod } from "lib/json-schema-to-zod";
 import { toAny } from "lib/utils";
 import { AppError } from "lib/errors";
 import { DefaultToolName } from "lib/ai/tools";
-import {
-  exaSearchToolForWorkflow,
-  exaContentsToolForWorkflow,
-} from "lib/ai/tools/web/web-search";
+import { getWebSearchTools } from "lib/ai/tools/web/web-search";
 import { mcpClientsManager } from "lib/ai/mcp/mcp-manager";
 
 /**
@@ -249,11 +246,12 @@ export const toolNodeExecutor: NodeExecutor<ToolNodeData> = async ({
       tool_result: toolResult,
     };
   } else if (node.tool.type == "app-tool") {
+    const { searchToolForWorkflow, contentToolForWorkflow } = getWebSearchTools();
     const executor =
       node.tool.id == DefaultToolName.WebContent
-        ? exaContentsToolForWorkflow.execute
+        ? contentToolForWorkflow.execute
         : node.tool.id == DefaultToolName.WebSearch
-          ? exaSearchToolForWorkflow.execute
+          ? searchToolForWorkflow.execute
           : () => "Unknown tool";
 
     const toolResult = await executor?.(result.input.parameter, {
