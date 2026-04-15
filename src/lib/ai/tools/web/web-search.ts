@@ -1,7 +1,8 @@
-import { tool as createTool } from "ai";
+import { tool as createTool, Tool } from "ai";
 import { JSONSchema7 } from "json-schema";
 import { jsonSchemaToZod } from "lib/json-schema-to-zod";
 import { safe } from "ts-safe";
+import { tavily } from "@tavily/core";
 
 // Exa API Types
 export interface ExaSearchRequest {
@@ -308,3 +309,191 @@ export const exaContentsTool = createTool({
       .unwrap();
   },
 });
+
+// --- Tavily Search & Extract Tools ---
+
+const getTavilyClient = () => {
+  const apiKey = process.env.TAVILY_API_KEY;
+  if (!apiKey) {
+    throw new Error("TAVILY_API_KEY is not configured");
+  }
+  return tavily({ apiKey });
+};
+
+export const tavilySearchSchema: JSONSchema7 = {
+  type: "object",
+  properties: {
+    query: {
+      type: "string",
+      description: "Search query",
+    },
+    maxResults: {
+      type: "number",
+      description: "Number of search results to return",
+      default: 5,
+      minimum: 1,
+      maximum: 20,
+    },
+    searchDepth: {
+      type: "string",
+      enum: ["basic", "advanced"],
+      description:
+        "Search depth - basic for quick results, advanced for higher relevance",
+      default: "basic",
+    },
+    topic: {
+      type: "string",
+      enum: ["general", "news", "finance"],
+      description: "Topic category to focus the search on",
+      default: "general",
+    },
+    includeDomains: {
+      type: "array",
+      items: { type: "string" },
+      description: "List of domains to specifically include in search results",
+    },
+    excludeDomains: {
+      type: "array",
+      items: { type: "string" },
+      description:
+        "List of domains to specifically exclude from search results",
+    },
+    timeRange: {
+      type: "string",
+      enum: ["day", "week", "month", "year"],
+      description: "Time range filter for results",
+    },
+  },
+  required: ["query"],
+};
+
+export const tavilyExtractSchema: JSONSchema7 = {
+  type: "object",
+  properties: {
+    urls: {
+      type: "array",
+      items: { type: "string" },
+      description: "List of URLs to extract content from (max 20)",
+    },
+    extractDepth: {
+      type: "string",
+      enum: ["basic", "advanced"],
+      description:
+        "Extraction depth - basic for fast extraction, advanced for more thorough content",
+      default: "basic",
+    },
+  },
+  required: ["urls"],
+};
+
+export const tavilySearchToolForWorkflow = createTool({
+  description:
+    "Search the web using Tavily - performs real-time web searches optimized for LLMs. Returns high-quality, relevant results with content extraction.",
+  inputSchema: jsonSchemaToZod(tavilySearchSchema),
+  execute: async (params) => {
+    const client = getTavilyClient();
+    return client.search(params.query, {
+      maxResults: params.maxResults || 5,
+      searchDepth: params.searchDepth || "basic",
+      topic: params.topic || "general",
+      includeDomains: params.includeDomains,
+      excludeDomains: params.excludeDomains,
+      timeRange: params.timeRange,
+    });
+  },
+});
+
+export const tavilyExtractToolForWorkflow = createTool({
+  description:
+    "Extract detailed content from specific URLs using Tavily - retrieves full text content and structured information from web pages.",
+  inputSchema: jsonSchemaToZod(tavilyExtractSchema),
+  execute: async (params) => {
+    const client = getTavilyClient();
+    return client.extract(params.urls, {
+      extractDepth: params.extractDepth || "basic",
+    });
+  },
+});
+
+export const tavilySearchTool = createTool({
+  description:
+    "Search the web using Tavily - performs real-time web searches optimized for LLMs. Returns high-quality, relevant results with content extraction.",
+  inputSchema: jsonSchemaToZod(tavilySearchSchema),
+  execute: (params) => {
+    return safe(async () => {
+      const client = getTavilyClient();
+      const result = await client.search(params.query, {
+        maxResults: params.maxResults || 5,
+        searchDepth: params.searchDepth || "basic",
+        topic: params.topic || "general",
+        includeDomains: params.includeDomains,
+        excludeDomains: params.excludeDomains,
+        timeRange: params.timeRange,
+      });
+
+      return {
+        ...result,
+        guide: `Use the search results to answer the user's question. Summarize the content and ask if they have any additional questions about the topic.`,
+      };
+    })
+      .ifFail((e) => {
+        return {
+          isError: true,
+          error: e.message,
+          solution:
+            "A web search error occurred. First, explain to the user what caused this specific error and how they can resolve it. Then provide helpful information based on your existing knowledge to answer their question.",
+        };
+      })
+      .unwrap();
+  },
+});
+
+export const tavilyExtractTool = createTool({
+  description:
+    "Extract detailed content from specific URLs using Tavily - retrieves full text content and structured information from web pages.",
+  inputSchema: jsonSchemaToZod(tavilyExtractSchema),
+  execute: async (params) => {
+    return safe(async () => {
+      const client = getTavilyClient();
+      return await client.extract(params.urls, {
+        extractDepth: params.extractDepth || "basic",
+      });
+    })
+      .ifFail((e) => {
+        return {
+          isError: true,
+          error: e.message,
+          solution:
+            "A web content extraction error occurred. First, explain to the user what caused this specific error and how they can resolve it. Then provide helpful information based on your existing knowledge to answer their question.",
+        };
+      })
+      .unwrap();
+  },
+});
+
+// --- Provider factory ---
+
+export function getWebSearchTools(): {
+  searchTool: Tool;
+  contentTool: Tool;
+  searchToolForWorkflow: Tool;
+  contentToolForWorkflow: Tool;
+} {
+  const provider = process.env.SEARCH_PROVIDER || "exa";
+
+  if (provider === "tavily") {
+    return {
+      searchTool: tavilySearchTool,
+      contentTool: tavilyExtractTool,
+      searchToolForWorkflow: tavilySearchToolForWorkflow,
+      contentToolForWorkflow: tavilyExtractToolForWorkflow,
+    };
+  }
+
+  return {
+    searchTool: exaSearchTool,
+    contentTool: exaContentsTool,
+    searchToolForWorkflow: exaSearchToolForWorkflow,
+    contentToolForWorkflow: exaContentsToolForWorkflow,
+  };
+}
